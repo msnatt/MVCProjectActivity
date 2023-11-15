@@ -1,0 +1,40 @@
+﻿@model ActivityProjectManage.Models.Project
+
+<div class="form-group">
+    @Html.LabelFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.StartProjectDate, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.StartProjectDate, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.StartProjectDate, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.EndProjectDate, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.EndProjectDate, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.EndProjectDate, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.Label("     ", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        <input type="submit" value="Add" onclick="AddAct()" />
+    </div>
+</div>
+@*@Html.EditorFor(model => model.Activities)*@
+@{var i = 0;}
+@foreach (var item in Model.Activities)
+{
+    @Html.EditorFor(model => item, "Activity", "activities[" + i++ + "]")
+
+}
+<hr />

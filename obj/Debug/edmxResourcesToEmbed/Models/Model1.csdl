@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjectActivityModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="ProjectActivityEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Activities" EntityType="ProjectActivityModel.Activity" />
+    <EntitySet Name="Projects" EntityType="ProjectActivityModel.Project" />
+    <AssociationSet Name="FK_ActivityID_ActivityHeaderID" Association="ProjectActivityModel.FK_ActivityID_ActivityHeaderID">
+      <End Role="Activity" EntitySet="Activities" />
+      <End Role="Activity1" EntitySet="Activities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProjectID_ActivityID" Association="ProjectActivityModel.FK_ProjectID_ActivityID">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="Activity" EntitySet="Activities" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Activity">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ActivityName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProjectID" Type="Int32" Nullable="false" />
+    <Property Name="HeaderID" Type="Int32" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Activity1" Relationship="ProjectActivityModel.FK_ActivityID_ActivityHeaderID" FromRole="Activity" ToRole="Activity1" />
+    <NavigationProperty Name="Activity2" Relationship="ProjectActivityModel.FK_ActivityID_ActivityHeaderID" FromRole="Activity1" ToRole="Activity" />
+    <NavigationProperty Name="Project" Relationship="ProjectActivityModel.FK_ProjectID_ActivityID" FromRole="Activity" ToRole="Project" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StartProjectDate" Type="DateTime" Precision="3" />
+    <Property Name="EndProjectDate" Type="DateTime" Precision="3" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Activities" Relationship="ProjectActivityModel.FK_ProjectID_ActivityID" FromRole="Project" ToRole="Activity" />
+  </EntityType>
+  <Association Name="FK_ActivityID_ActivityHeaderID">
+    <End Type="ProjectActivityModel.Activity" Role="Activity" Multiplicity="0..1" />
+    <End Type="ProjectActivityModel.Activity" Role="Activity1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Activity">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Activity1">
+        <PropertyRef Name="HeaderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProjectID_ActivityID">
+    <End Type="ProjectActivityModel.Project" Role="Project" Multiplicity="1" />
+    <End Type="ProjectActivityModel.Activity" Role="Activity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Activity">
+        <PropertyRef Name="ProjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
