@@ -1,5 +1,4 @@
 ﻿@model ActivityProjectManage.Models.Project
-
 @{
     ViewBag.Title = "Create";
 }
@@ -14,11 +13,9 @@
     @Html.HiddenFor(m => m.CreateDate)
     @Html.HiddenFor(m => m.UpdateDate)
     @Html.HiddenFor(m => m.IsDeleted)
-
     <div class="form-horizontal">
         <h4>Project</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.EditorFor(model => model)
 
 
@@ -43,10 +40,6 @@
     function AddAct() {
         
         $("#myform").attr("action", '@Url.Action("AddActivity", "Projects")');
-        $("#myform").submit();
-    }
-    function EditAct() {
-        $("#myform").attr("action", '@Url.Action("EditActivity", "Projects")');
         $("#myform").submit();
     }
     function DeleteAct(m) {

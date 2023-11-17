@@ -21,6 +21,7 @@ namespace ActivityProjectManage.Models
         }
     
         public int ID { get; set; }
+        public Nullable<int> Level { get; set; }
         public string ActivityName { get; set; }
         public int ProjectID { get; set; }
         public Nullable<int> HeaderID { get; set; }

@@ -80,3 +80,4 @@ F:\63114540387\ASPdotNet\ActivityProjectManage\ActivityProjectManage\obj\Debug\A
 F:\63114540387\ASPdotNet\ActivityProjectManage\ActivityProjectManage\obj\Debug\ActivityProjectManage.csproj.CopyComplete
 F:\63114540387\ASPdotNet\ActivityProjectManage\ActivityProjectManage\obj\Debug\ActivityProjectManage.dll
 F:\63114540387\ASPdotNet\ActivityProjectManage\ActivityProjectManage\obj\Debug\ActivityProjectManage.pdb
+F:\63114540387\ASPdotNet\ActivityProjectManage\ActivityProjectManage\obj\Debug\ActivityProjectManage.csproj.AssemblyReference.cache

@@ -63,7 +63,6 @@ namespace ActivityProjectManage.Controllers
                 db.SaveChanges();
 
             }
-            //return View(project);
             return RedirectToAction("Index");
 
         }
@@ -72,24 +71,22 @@ namespace ActivityProjectManage.Controllers
         {
             foreach (var item in activities)
             {
-                item.CreateDate = DateTime.Now;
-                item.UpdateDate = DateTime.Now;
-                item.IsDeleted = false;
-                db.Activities.Add(item);
-
-                if (item.Activity1 == null)
+                if (!(bool)item.IsDeleted)
                 {
+                    item.UpdateDate = DateTime.Now;
+                    item.CreateDate = DateTime.Now;
 
-                }
-                else
-                {
-                    SaveactivityToDB(item.Activity1);
+                    db.Activities.Add(item);
+
+                    if (item.Activity1.Count > 0)
+                    {
+                        SaveactivityToDB(item.Activity1);
+                    }
+
                 }
             }
-            //db.SaveChanges();
         }
 
-        // GET: Projects/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -101,26 +98,62 @@ namespace ActivityProjectManage.Controllers
             {
                 return HttpNotFound();
             }
+            project.Activities = project.Activities.Where(s => s.Level == 0).ToList();
             return View(project);
         }
 
-        // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,ProjectName,StartProjectDate,EndProjectDate,CreateDate,UpdateDate,IsDeleted")] Project project)
+        public ActionResult Edit(Project project)
         {
             if (ModelState.IsValid)
             {
                 project.UpdateDate = DateTime.Now;
 
+                var x = project.Activities;
+                project.Activities = null;
+                UpdatectivityToDB(x, 0);
+
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return View(project);
         }
+        private void UpdatectivityToDB(ICollection<Activity> activities, int HeaderID)
+        {
+            foreach (var item in activities)
+            {
+                if (HeaderID != 0)
+                {
+                    item.HeaderID = HeaderID;
+                }
+
+                var y = item.Activity1;
+                item.Activity1 = null;
+                if (item.ID == 0)
+                {
+
+                    item.CreateDate = DateTime.Now;
+                    item.UpdateDate = DateTime.Now;
+                    db.Activities.Add(item);
+                }
+                else
+                {
+                    item.UpdateDate = DateTime.Now;
+                    db.Entry(item).State = EntityState.Modified;
+
+                }
+                db.SaveChanges();
+
+                if (y.Count > 0)
+                {
+                    UpdatectivityToDB(y, item.ID);
+                }
+            }
+        }
+
 
         // GET: Projects/Delete/5
         public ActionResult Delete(int? id)
@@ -137,13 +170,11 @@ namespace ActivityProjectManage.Controllers
             return View(project);
         }
 
-        // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Project project = db.Projects.Find(id);
-            //db.Projects.Remove(project);
             project.IsDeleted = true;
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -157,21 +188,72 @@ namespace ActivityProjectManage.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // =========== Index =============
+        public ActionResult EditProject(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Project project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            project.Activities = project.Activities.Where(s => s.Level == 0).ToList();
+
+            project.isAddInEdit = true;
+
+            return View("Edit", project);
+        }
+        // ============ End Index =============
+
+
+
+
+        // ============= Add Activity =============
+
+        // Create
         public ActionResult AddActivity(Project project)
         {
             Activity activity = new Activity();
             activity.ProjectID = project.ID;
+            activity.Level = 0;
+            activity.IsDeleted = false;
             project.Activities.Add(activity);
 
 
             return View("Create", project);
         }
-        public ActionResult EditActivity(Project project)
+        // Edit
+        public ActionResult AddActivityEdit(Project project)
         {
-            return View("Create", project);
+            Activity activity = new Activity();
+            activity.ProjectID = project.ID;
+            activity.Level = 0;
+            activity.IsDeleted = false;
+            project.Activities.Add(activity);
+
+
+            return View("Edit", project);
         }
+
+
+        //=========== Delete ============
+
+        //Edit
+        public ActionResult DeleteActivityEdit(Project project)
+        {
+            ModelState.Clear();
+            FindActivityForDelete(project.Activities);
+            return View("Edit", project);
+        }
+
+        //Create
         public ActionResult DeleteActivity(Project project)
         {
+            ModelState.Clear();
             FindActivityForDelete(project.Activities);
             return View("Create", project);
         }
@@ -180,27 +262,34 @@ namespace ActivityProjectManage.Controllers
         {
             foreach (var item in activities)
             {
-                if (item.isdeleteActivity == true)
+                if (item.IsDeleted == true)
                 {
-                    item.IsDeleted = true;
                     foreach (var item2 in item.Activity1)
                     {
                         item2.IsDeleted = true;
                     }
-                }
-                else
-                {
-                    NextFindActivity(item.Activity1);
+                    FindActivityForDelete(item.Activity1);
                 }
             }
         }
 
+        // ================= Add SubActivity ==================
+
+        //Edit
+        public ActionResult AddSubActivityEdit(Project project)
+        {
+
+            FindActivity(project.Activities);
+            return View("Edit", project);
+        }
+
+        //Create
         public ActionResult AddSubActivity(Project project)
         {
-            NextFindActivity(project.Activities);
+            FindActivity(project.Activities);
             return View("Create", project);
         }
-        private void NextFindActivity(ICollection<Activity> activities)
+        private void FindActivity(ICollection<Activity> activities)
         {
             foreach (var item in activities)
             {
@@ -209,11 +298,13 @@ namespace ActivityProjectManage.Controllers
                     var x = new Activity();
                     x.HeaderID = item.ID;
                     x.ProjectID = item.ProjectID;
+                    x.Level = item.Level + 1;
+                    x.IsDeleted = false;
                     item.Activity1.Add(x);
                 }
                 else
                 {
-                    NextFindActivity(item.Activity1);
+                    FindActivity(item.Activity1);
                 }
             }
         }

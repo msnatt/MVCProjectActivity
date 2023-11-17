@@ -17,6 +17,7 @@
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Level" Type="Int32" />
     <Property Name="ActivityName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="ProjectID" Type="Int32" Nullable="false" />
     <Property Name="HeaderID" Type="Int32" />

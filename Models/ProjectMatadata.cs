@@ -9,10 +9,12 @@ namespace ActivityProjectManage.Models
     public class ProjectMatadata
     {
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> StartProjectDate { get; set; }
 
 
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EndProjectDate { get; set; }
     }
     [MetadataType(typeof(ProjectMatadata))]
@@ -28,5 +30,6 @@ namespace ActivityProjectManage.Models
                 return StartAndEndDate;
             }
         }
+        public bool isAddInEdit { get; set; }
     }
 }

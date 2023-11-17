@@ -10,6 +10,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Level" Type="int" />
           <Property Name="ActivityName" Type="nvarchar" MaxLength="50" />
           <Property Name="ProjectID" Type="int" Nullable="false" />
           <Property Name="HeaderID" Type="int" />
@@ -86,6 +87,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Level" Type="Int32" />
           <Property Name="ActivityName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ProjectID" Type="Int32" Nullable="false" />
           <Property Name="HeaderID" Type="Int32" />
@@ -148,6 +150,7 @@
                 <ScalarProperty Name="HeaderID" ColumnName="HeaderID" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="ActivityName" ColumnName="ActivityName" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
